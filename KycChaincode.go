@@ -41,7 +41,7 @@ func (t *KycChaincode) Init(stub shim.ChaincodeStubInterface, function string, a
 
 // Add user KYC data in Blockchain
 func (t *KycChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	if function == KycIndexTxStr {
+	if function == "write" {
 		return t.RegisterKYC(stub, args)
 	}
 	return nil, nil
@@ -50,7 +50,6 @@ func (t *KycChaincode) Invoke(stub shim.ChaincodeStubInterface, function string,
 func (t *KycChaincode) RegisterKYC(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	var KycDataObj KycData
-	//var KycDataList []KycData
 	var err error
 	var UserPanNumber string
 
@@ -65,13 +64,6 @@ func (t *KycChaincode) RegisterKYC(stub shim.ChaincodeStubInterface, args []stri
 
 	fmt.Printf("Input from user:%s\n", KycDataObj)
 
-	//regionTxsAsBytes, err := stub.GetState(UserPanNumber)
-	//if err != nil {
-	//return nil, errors.New("Failed to get consumer Transactions")
-	//}
-	//json.Unmarshal(regionTxsAsBytes, &KycDataObj)
-
-	//KycDataList = append(KycDataList, KycDataObj)
 	jsonAsBytes, _ := json.Marshal(KycDataObj)
 
 	err = stub.PutState(UserPanNumber, jsonAsBytes)
@@ -107,19 +99,11 @@ func (t *KycChaincode) Query(stub shim.ChaincodeStubInterface, function string, 
 
 func (t *KycChaincode) GetKycDetails(stub shim.ChaincodeStubInterface, UserPanNumber string) ([]byte, error) {
 
-	//var requiredObj KycData
+	
 	KycTxAsBytes, err := stub.GetState(UserPanNumber)
 	if err != nil {
 		return nil, errors.New("Failed to get Merchant Transactions")
 	}
-	//var KycTxObject KycData
-	//json.Unmarshal(KycTxAsBytes, &KycTxObject)
-	//fmt.Printf("Output from chaincode: %s\n", KycTxObject)
-
-	//res, err := json.Marshal(KycTxAsBytes)
-	//if err != nil {
-	//return nil, errors.New("Failed to Marshal the required Obj")
-	//}
 	return KycTxAsBytes, nil
 
 }
