@@ -3,38 +3,25 @@ package main
 import (
 	"errors"
 	"fmt"
-	//"strconv"
 	"encoding/json"
-
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	//"github.com/golang/protobuf/ptypes/timestamp"
 )
 
 // Region Chaincode implementation
 type KycChaincode struct {
 }
 
-var KycIndexTxStr = "_KycIndexTxStr"
 
 type KycData struct {
-	USER_PAN_NO  string `json:"USER_PAN_NO"`
+	USER_ID    string `json:"USER_ID"`
 	USER_NAME    string `json:"USER_NAME"`
 	USER_KYC_PDF string `json:"USER_KYC_PDF"`
+	KYC_DATE string `json:"KYC_DATE"`
+	EXPIRY_DATE string `json:"EXPIRY_DATE"`
+	BANK_NAME string `json:"BANK_NAME"`
 }
 
 func (t *KycChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-
-	var err error
-	// Initialize the chaincode
-
-	fmt.Printf("Deployment of KYC is completed\n")
-
-	var EmptyKYC KycData
-	jsonAsBytes, _ := json.Marshal(EmptyKYC)
-	err = stub.PutState(KycIndexTxStr, jsonAsBytes)
-	if err != nil {
-		return nil, err
-	}
 
 	return nil, nil
 }
@@ -51,45 +38,43 @@ func (t *KycChaincode) RegisterKYC(stub shim.ChaincodeStubInterface, args []stri
 
 	var KycDataObj KycData
 	var err error
-	var UserPanNumber string
+	var userId string
 
-	if len(args) != 3 {
-		return nil, errors.New("Incorrect number of arguments. Need 14 arguments")
+	if len(args) != 6 {
+		return nil, errors.New("Incorrect number of arguments. Need 6 arguments")
 	}
 
-	// Initialize the chaincode
-	UserPanNumber = args[0]
+	userId = args[0]
+	KycDataObj.USER_ID=args[0]
 	KycDataObj.USER_NAME = args[1]
 	KycDataObj.USER_KYC_PDF = args[2]
+	KycDataObj.KYC_DATE= args[3]
+	KycDataObj.EXPIRY_DATE= args[4]
+	KycDataObj.BANK_NAME= args[5]
 
 	fmt.Printf("Input from user:%s\n", KycDataObj)
 
 	jsonAsBytes, _ := json.Marshal(KycDataObj)
 
-	err = stub.PutState(UserPanNumber, jsonAsBytes)
+	err = stub.PutState(userId, jsonAsBytes)
 	if err != nil {
 		return nil, err
 	}
 	return nil, nil
 }
 
-// Query callback representing the query of a chaincode
 func (t *KycChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 
 	var err error
 	var resAsBytes []byte
-	var UserPanNumber string
+	var userId string
 
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting name of the person to query")
 	}
 
-	UserPanNumber = args[0]
-
-	resAsBytes, err = t.GetKycDetails(stub, UserPanNumber)
-
-	fmt.Printf("Query Response:%s\n", resAsBytes)
-
+	userId = args[0]
+	resAsBytes, err = t.GetKycDetails(stub, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -97,10 +82,10 @@ func (t *KycChaincode) Query(stub shim.ChaincodeStubInterface, function string, 
 	return resAsBytes, nil
 }
 
-func (t *KycChaincode) GetKycDetails(stub shim.ChaincodeStubInterface, UserPanNumber string) ([]byte, error) {
+func (t *KycChaincode) GetKycDetails(stub shim.ChaincodeStubInterface, userId string) ([]byte, error) {
 
 	
-	KycTxAsBytes, err := stub.GetState(UserPanNumber)
+	KycTxAsBytes, err := stub.GetState(userId)
 	if err != nil {
 		return nil, errors.New("Failed to get Merchant Transactions")
 	}
