@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"strconv"
-	"time"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
