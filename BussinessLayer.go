@@ -69,7 +69,7 @@ func InsertContractDetails(stub shim.ChaincodeStubInterface, args []string) ([]b
 	if !(time.Now().Local().After(ContractDetails.ContractDueDate) == true) {
 			return nil, errors.New("Error in adding ContractDetails record.")
 	}
-	if !(time.Now().Local().Before(ContractDetails.ContractDate) == true) {
+	if !(time.Now().Local().Before(ContractDetails.CreateDate) == true) {
 			return nil, errors.New("Error in adding ContractDetails record.")
 	}
 	
