@@ -168,6 +168,7 @@ func InsertUserDocuments(stub shim.ChaincodeStubInterface, args []string) ([]byt
 				&shim.Column{Value: &shim.Column_String_{String_: args[0]}},
 				&shim.Column{Value: &shim.Column_String_{String_: args[1]}},
 				&shim.Column{Value: &shim.Column_Bytes{Bytes: DocumentIDBytes}},
+				&shim.Column{Value: &shim.Column_String_{String_: ""}},
 			},
 		})
 	} else {
