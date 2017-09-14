@@ -44,6 +44,7 @@ type PartysDetails struct {
 type UserParty struct {
 	UserDetails     UserDetails       `json:"userDetails"`
 	DocumentDetails []DocumentDetails `json:"documentDetails"`
+	LastDate		string			  `json:"lastDate"`
 }
 
 type UserConsortium struct {

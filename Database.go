@@ -478,6 +478,7 @@ func GetListOfUsers(stub shim.ChaincodeStubInterface, args []string) ([]byte, er
 		json.Unmarshal(UserDocumentsBytes, &UserDocuments)
 		UserParty.UserDetails = User
 		UserParty.DocumentDetails = UserDocuments.DocumentDetails
+		UserParty.LastDate = UserDocuments.LastDate
 		UserPartys = append(UserPartys, UserParty)
 	}
 	responseBytes, _ := json.Marshal(UserPartys)
