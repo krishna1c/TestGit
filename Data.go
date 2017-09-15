@@ -39,6 +39,7 @@ type PartyDetails struct {
 type PartysDetails struct {
 	DocumentTypes []string `json:"documentTypes"`
 	Name          string   `json:"name"`
+	Country       string   `json:"country"`
 }
 
 type UserParty struct {

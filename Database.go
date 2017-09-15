@@ -125,6 +125,7 @@ func InsertPartyDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte
 	var PartysDetails PartysDetails
 	PartysDetails.Name = Party.Name
 	PartysDetails.DocumentTypes = Party.DocumentTypes
+	PartysDetails.Country = Party.Country
 	ListOfBanks = append(ListOfBanks, PartysDetails)
 	ListOfBanksBytes, _ = json.Marshal(ListOfBanks)
 	stub.PutState("ListOfBanks", ListOfBanksBytes)
@@ -434,7 +435,7 @@ func GetPartyDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, e
 	Party.Name = row.Columns[1].GetString_()
 	Party.Phone = row.Columns[2].GetString_()
 	Party.Email = row.Columns[3].GetString_()
-	Party.Email = row.Columns[5].GetString_()
+	Party.Country = row.Columns[5].GetString_()
 
 	var DocumentTypes []interface{}
 	json.Unmarshal([]byte(row.Columns[4].GetString_()), &DocumentTypes)
