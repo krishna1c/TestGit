@@ -27,7 +27,6 @@ func CreateDatabase(stub shim.ChaincodeStubInterface, args []string) ([]byte, er
 		&shim.ColumnDefinition{Name: "Phone", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "Email", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "DocumentTypes", Type: shim.ColumnDefinition_BYTES, Key: false},
-		&shim.ColumnDefinition{Name: "Country", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
 		return nil, errors.New("Failed creating UserDetails table.")
@@ -59,7 +58,6 @@ func CreateDatabase(stub shim.ChaincodeStubInterface, args []string) ([]byte, er
 		&shim.ColumnDefinition{Name: "UniqueIDParty", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "UniqueIDUser", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "DocumentID", Type: shim.ColumnDefinition_BYTES, Key: false},
-		&shim.ColumnDefinition{Name: "LastDate", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
 		return nil, errors.New("Failed creating UserDocuments table.")
@@ -112,7 +110,6 @@ func InsertPartyDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte
 			&shim.Column{Value: &shim.Column_String_{String_: Party.Phone}},
 			&shim.Column{Value: &shim.Column_String_{String_: Party.Email}},
 			&shim.Column{Value: &shim.Column_Bytes{Bytes: DocumentTypesBytes}},
-			&shim.Column{Value: &shim.Column_String_{String_: Party.Country}},
 		},
 	})
 	if !ok || err != nil {
@@ -125,7 +122,6 @@ func InsertPartyDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte
 	var PartysDetails PartysDetails
 	PartysDetails.Name = Party.Name
 	PartysDetails.DocumentTypes = Party.DocumentTypes
-	PartysDetails.Country = Party.Country
 	ListOfBanks = append(ListOfBanks, PartysDetails)
 	ListOfBanksBytes, _ = json.Marshal(ListOfBanks)
 	stub.PutState("ListOfBanks", ListOfBanksBytes)
@@ -169,7 +165,6 @@ func InsertUserDocuments(stub shim.ChaincodeStubInterface, args []string) ([]byt
 				&shim.Column{Value: &shim.Column_String_{String_: args[0]}},
 				&shim.Column{Value: &shim.Column_String_{String_: args[1]}},
 				&shim.Column{Value: &shim.Column_Bytes{Bytes: DocumentIDBytes}},
-				&shim.Column{Value: &shim.Column_String_{String_: ""}},
 			},
 		})
 	} else {
@@ -187,7 +182,6 @@ func InsertUserDocuments(stub shim.ChaincodeStubInterface, args []string) ([]byt
 				&shim.Column{Value: &shim.Column_String_{String_: args[0]}},
 				&shim.Column{Value: &shim.Column_String_{String_: args[1]}},
 				&shim.Column{Value: &shim.Column_Bytes{Bytes: DocumentIDBytes}},
-				&shim.Column{Value: &shim.Column_String_{String_: args[3]}},
 			},
 		})
 
@@ -208,7 +202,6 @@ func InsertUserDocuments(stub shim.ChaincodeStubInterface, args []string) ([]byt
 					&shim.Column{Value: &shim.Column_String_{String_: args[0]}},
 					&shim.Column{Value: &shim.Column_String_{String_: args[1]}},
 					&shim.Column{Value: &shim.Column_Bytes{Bytes: DocumentIDBytes}},
-					&shim.Column{Value: &shim.Column_String_{String_: args[3]}},
 				},
 			})
 
@@ -251,7 +244,6 @@ func InsertPartyDocuments(stub shim.ChaincodeStubInterface, args []string) ([]by
 			&shim.Column{Value: &shim.Column_String_{String_: args[0]}},
 			&shim.Column{Value: &shim.Column_String_{String_: args[1]}},
 			&shim.Column{Value: &shim.Column_Bytes{Bytes: DocumentIDBytes}},
-			&shim.Column{Value: &shim.Column_String_{String_: args[3]}},
 		},
 	})
 
@@ -393,7 +385,6 @@ func GetUserDocuments(stub shim.ChaincodeStubInterface, args []string) ([]byte, 
 	UserDocument.UniqueIDParty = args[0]
 	UserDocument.UniqueIDUser = args[1]
 	UserDocument.DocumentDetails = Documents
-	UserDocument.LastDate = row.Columns[3].GetString_();
 
 	responseBytes, _ := json.Marshal(UserDocument)
 	return responseBytes, nil
@@ -435,7 +426,6 @@ func GetPartyDetails(stub shim.ChaincodeStubInterface, args []string) ([]byte, e
 	Party.Name = row.Columns[1].GetString_()
 	Party.Phone = row.Columns[2].GetString_()
 	Party.Email = row.Columns[3].GetString_()
-	Party.Country = row.Columns[5].GetString_()
 
 	var DocumentTypes []interface{}
 	json.Unmarshal([]byte(row.Columns[4].GetString_()), &DocumentTypes)
@@ -480,7 +470,6 @@ func GetListOfUsers(stub shim.ChaincodeStubInterface, args []string) ([]byte, er
 		json.Unmarshal(UserDocumentsBytes, &UserDocuments)
 		UserParty.UserDetails = User
 		UserParty.DocumentDetails = UserDocuments.DocumentDetails
-		UserParty.LastDate = UserDocuments.LastDate
 		UserPartys = append(UserPartys, UserParty)
 	}
 	responseBytes, _ := json.Marshal(UserPartys)

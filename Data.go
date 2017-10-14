@@ -12,7 +12,6 @@ type UserDocuments struct {
 	UniqueIDParty   string            `json:"uniqueIdParty"`
 	UniqueIDUser    string            `json:"uniqueIdUser"`
 	DocumentDetails []DocumentDetails `json:"documentDetails"`
-	LastDate		string			  `json:"lastDate"`				
 }
 
 type DocumentDetails struct {
@@ -33,19 +32,16 @@ type PartyDetails struct {
 	Password      string   `json:"password"`
 	Phone         string   `json:"phone"`
 	Email         string   `json:"email"`
-	Country       string   `json:"country"`
 }
 
 type PartysDetails struct {
 	DocumentTypes []string `json:"documentTypes"`
 	Name          string   `json:"name"`
-	Country       string   `json:"country"`
 }
 
 type UserParty struct {
 	UserDetails     UserDetails       `json:"userDetails"`
 	DocumentDetails []DocumentDetails `json:"documentDetails"`
-	LastDate		string			  `json:"lastDate"`
 }
 
 type UserConsortium struct {
