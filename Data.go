@@ -1,23 +1,37 @@
 package main
 
-type UserDetails struct {
+type Contract struct {
+	ContractId              string `json:"contractId"`
+	Order                   Order  `json:"order"`
+	CreateDate              string `json:"createDate"`
+	ContractDueDate         string `json:"contractDueDate"`
+	ContractStatus          string `json:"contractStatus"`
+	AdditionalInf           string `json:"additionalInf"`
+	Invoice					string `json:"invoice"`
+	PackagingList			string `json:"packagingList"`
+	LineOfCredit			string `json:"lineOfCredit"`
+	BillOfShipment			string `json:"billOfShipment"`
+}
+
+type Order struct {
+	Articles []Articles `json:"articles"`
+	Amount   Amount     `json:"amount"`
+	Buyer    User       `json:"buyer"`
+	Seller   User       `json:"seller"`
+	Shipment Shipment   `json:"shipment"`
+}
+
+type User struct {
+	UniqueId string `json:"uniqueId"`
 	Name     string `json:"name"`
-	Phone    string `json:"phone"`
-	Email    string `json:"email"`
-	UniqueID string `json:"uniqueId"`
-	Password string `json:"password"`
+	Country  string `json:"country"`
+	Bank     string `json:"bank"`
+	Address  string `json:"address"`
 }
 
-type UserDocuments struct {
-	UniqueIDParty   string            `json:"uniqueIdParty"`
-	UniqueIDUser    string            `json:"uniqueIdUser"`
-	DocumentDetails []DocumentDetails `json:"documentDetails"`
-}
-
-type DocumentDetails struct {
-	ID     string `json:"id"`
-	Type   string `json:"type"`
-	Status string `json:"status"`
+type Amount struct {
+	Currency string `json:"currency"`
+	Value    int    `json:"value"`
 }
 
 type Document struct {
@@ -25,28 +39,19 @@ type Document struct {
 	Data string `json:"data"`
 }
 
-type PartyDetails struct {
-	UniqueID      string   `json:"uniqueId"`
-	DocumentTypes []string `json:"documentTypes"`
-	Name          string   `json:"name"`
-	Password      string   `json:"password"`
-	Phone         string   `json:"phone"`
-	Email         string   `json:"email"`
+type Articles struct {
+	Description string `json:"description"`
+	Quantity    int    `json:"quantity"`
+	Amount      Amount `json:"amount"`
 }
 
-type PartysDetails struct {
-	DocumentTypes []string `json:"documentTypes"`
-	Name          string   `json:"name"`
+type Shipment struct {
+	Company    Company `json:"company"`
+	TrackingID string  `json:"trackingId"`
 }
 
-type UserParty struct {
-	UserDetails     UserDetails       `json:"userDetails"`
-	DocumentDetails []DocumentDetails `json:"documentDetails"`
-}
-
-type UserConsortium struct {
-	UserDetails     UserDetails       `json:"userDetails"`
-	DocumentDetails []DocumentDetails `json:"documentDetails"`
-	AllDocuments    []string          `json:"allDocuments"`
-	PartysDetails   []PartysDetails   `json:"partysDetails"`
+type Company struct {
+	UniqueId string `json:"uniqueId"`
+	Name     string `json:"name"`
+	Country  string `json:"country"`
 }
