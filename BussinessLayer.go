@@ -4,11 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"strconv"
-	"time"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
-
-const dateFormat string = "2006-01-02"
 
 func CreateDatabase(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var err error
@@ -66,12 +63,6 @@ func InsertContractDetails(stub shim.ChaincodeStubInterface, args []string) ([]b
 	var ok bool
 	
 	json.Unmarshal([]byte(args[0]), &ContractDetails)
-	if !(time.Now().Local().After(ContractDetails.ContractDueDate) == true) {
-			return nil, errors.New("Error in adding ContractDetails record.")
-	}
-	if !(time.Now().Local().Before(ContractDetails.CreateDate) == true) {
-			return nil, errors.New("Error in adding ContractDetails record.")
-	}
 	
 	ok, err = stub.InsertRow("ContractDetails", shim.Row{
 		Columns: []*shim.Column{
